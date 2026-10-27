@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Web Server Infrastructure - managed-node-1</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #1e3a8a;
+            --accent: #10b981;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .badge {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.35rem 0.9rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        .title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        .card-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+        .card-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            word-break: break-word;
+        }
+        .highlight {
+            color: var(--accent);
+        }
+        .section-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+        .section-box h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        .team-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+        .team-table th, .team-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .team-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        .team-table td {
+            font-size: 0.95rem;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner Header -->
+        <header class="header">
+            <span class="badge">ACTIVE PRODUCTION NODE</span>
+            <h1 class="title">Intelligent Web Server Infrastructure</h1>
+            <p class="subtitle">Automated Deployment Powered by Ansible Configuration Management</p>
+        </header>
+
+        <!-- System Facts Grid (Populated dynamically by Ansible Fact Gathering) -->
+        <div class="grid">
+            <div class="card">
+                <div class="card-label">Managed Node Hostname</div>
+                <div class="card-value highlight">managed-node-1</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Server Role / Priority</div>
+                <div class="card-value">Primary Production Web Server (primary)</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Operating System</div>
+                <div class="card-value">Ubuntu 26.04</div>
+            </div>
+            <div class="card">
+                <div class="card-label">IP Address & Port</div>
+                <div class="card-value">172.17.17.169:80</div>
+            </div>
+            <div class="card">
+                <div class="card-label">System Memory</div>
+                <div class="card-value">7762 MB RAM</div>
+            </div>
+            <div class="card">
+                <div class="card-label">CPU Cores & Arch</div>
+                <div class="card-value">12 vCPUs (x86_64)</div>
+            </div>
+        </div>
+
+        <!-- Automation Metadata -->
+        <div class="section-box">
+            <h3>Infrastructure Orchestration Metadata</h3>
+            <p style="margin-bottom: 0.75rem; color: var(--text-muted);">
+                This web service is maintained continuously through idempotent Ansible playbooks.
+            </p>
+            <ul style="list-style-type: none; line-height: 2;">
+                <li><strong>Configuration Management Tool:</strong> Ansible Core 2.20.1</li>
+                <li><strong>Python Runtime:</strong> Python 3.14.4</li>
+                <li><strong>Target Web Server:</strong> nginx (Reverse Proxy & HTTP Server)</li>
+                <li><strong>Inventory Group:</strong> [webservers] & [production]</li>
+                <li><strong>Deployment Date & Time:</strong> 2026-10-27 17:07:31 (UTC)</li>
+            </ul>
+        </div>
+
+        <!-- Project Authors & Academic Credits -->
+        <div class="section-box">
+            <h3>Project Team Members & Contributions</h3>
+            <table class="team-table">
+                <thead>
+                    <tr>
+                        <th>Member Name</th>
+                        <th>Register Number</th>
+                        <th>Project Role & Responsibility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>AJEEZ PRABU B</strong></td>
+                        <td>23bcs161</td>
+                        <td>Ansible Architecture, Control Node Setup, SSH Key Auth, Ad Hoc Commands</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ARON YUVARAJ J</strong></td>
+                        <td>23bcs162</td>
+                        <td>Inventory Design (INI & YAML), Group/Host Variables, YAML Syntax Guide</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ASHIQ RAHMAN B</strong></td>
+                        <td>23bcs163</td>
+                        <td>Web Server Playbook, Dynamic Jinja2 Templating, Handlers, Verification Suite</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="footer">
+            <p>Mepco Schlenk Engineering College &bull; Department of Computer Science and Engineering</p>
+            <p style="margin-top: 0.25rem;">Ansible DevOps Laboratory Project &bull; Academic Year 2026-2027</p>
+        </footer>
+    </div>
+</body>
+</html>
