@@ -1,0 +1,14 @@
+# ==============================================================================
+# Host Variables: inventory/host_vars/managed-node-2.yml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# Overrides and specific settings for managed-node-2 (Secondary Staging Node)
+# ==============================================================================
+
+node_role: "Secondary Staging Web Server"
+listen_port: 80
+http_port: 80
+server_banner_color: "#0f766e" # Deep Teal
+custom_header_tag: "NODE-02-SECONDARY-LOOPBACK"
+enable_ssl_placeholder: false
+status_badge: "STANDBY STAGING NODE"
+max_upload_size: "32M"

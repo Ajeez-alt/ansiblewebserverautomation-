@@ -1,0 +1,27 @@
+# ==============================================================================
+# Webservers Group Variables: inventory/group_vars/webservers.yml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# Applied exclusively to members of the [webservers] inventory group
+# ==============================================================================
+
+# Package and service specifics
+web_package_name: nginx
+web_service_name: nginx
+
+# Directory locations
+doc_root: /var/www/html
+nginx_conf_dir: /etc/nginx
+nginx_sites_available: /etc/nginx/sites-available
+nginx_sites_enabled: /etc/nginx/sites-enabled
+
+# Web server tuning
+worker_processes: auto
+worker_connections: 1024
+keepalive_timeout: 65
+server_tokens: "off"
+
+# Custom site parameters
+site_domain: "ansible-demo.local"
+site_title: "Intelligent Web Server Infrastructure"
+admin_contact: "webmaster@mepcoeng.ac.in"
+welcome_message: "Automated Deployment Powered by Ansible Configuration Management"

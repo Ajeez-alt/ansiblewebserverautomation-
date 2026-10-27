@@ -1,0 +1,13 @@
+# ==============================================================================
+# Host Variables: inventory/host_vars/managed-node-1.yml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# Overrides and specific settings for managed-node-1 (Production Primary Node)
+# ==============================================================================
+
+node_role: "Primary Production Web Server"
+listen_port: 80
+server_banner_color: "#1e3a8a" # Deep Navy Blue
+custom_header_tag: "NODE-01-PRIMARY-SSH"
+enable_ssl_placeholder: false
+status_badge: "ACTIVE PRODUCTION NODE"
+max_upload_size: "64M"

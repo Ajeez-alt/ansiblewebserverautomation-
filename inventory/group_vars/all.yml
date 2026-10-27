@@ -1,0 +1,20 @@
+# ==============================================================================
+# Global Variables: inventory/group_vars/all.yml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# Applied automatically to all hosts across the entire inventory
+# ==============================================================================
+
+app_owner: "ajeez"
+department: "Department of Computer Science and Engineering"
+institution: "Mepco Schlenk Engineering College, Sivakasi"
+project_title: "Automated Web Server Infrastructure with Ansible"
+deployment_timestamp: "2026-10-27"
+maintainer_email: "devops-team@mepcoeng.ac.in"
+
+# Common firewall & networking ports
+ssh_port: 22
+default_gateway: "127.0.0.1"
+
+# Base configuration directories
+system_log_dir: "/var/log/ansible-deployments"
+backup_dir: "/var/backups/webserver"

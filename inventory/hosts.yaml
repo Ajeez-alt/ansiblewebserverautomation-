@@ -1,0 +1,43 @@
+# ==============================================================================
+# Ansible Inventory (YAML Format): inventory/hosts.yaml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# Demonstrates: YAML-based hierarchical inventory structure
+# ==============================================================================
+
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    environment_name: production
+    organization: "Mepco Schlenk Engineering College"
+    project_name: "Ansible Web Infrastructure Automation"
+
+  children:
+    control:
+      hosts:
+        control-node:
+          ansible_connection: local
+          ansible_description: "Local Master Automation Orchestrator"
+
+    webservers:
+      vars:
+        web_server_package: nginx
+        web_service_name: nginx
+        default_document_root: /var/www/html
+      hosts:
+        managed-node-1:
+          ansible_host: 127.0.0.1
+          ansible_port: 22
+          ansible_user: ajeez
+          ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+          http_port: 80
+          server_priority: primary
+        managed-node-2:
+          ansible_connection: local
+          http_port: 8080
+          server_priority: secondary
+
+    loadbalancers:
+      hosts:
+        lb-node-1:
+          ansible_connection: local
+          lb_port: 8000
