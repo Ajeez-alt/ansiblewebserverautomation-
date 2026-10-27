@@ -1,0 +1,14 @@
+---
+# ==============================================================================
+# Playbook: deploy_webserver_role.yml
+# Purpose: Modular web server deployment utilizing the custom Ansible Role
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# ==============================================================================
+- name: Deploy Web Servers via Modular Ansible Role
+  hosts: webservers
+  become: true
+  roles:
+    - role: webserver
+      vars:
+        webserver_port: 80
+        webserver_title: "Modular Ansible Role Production Site"

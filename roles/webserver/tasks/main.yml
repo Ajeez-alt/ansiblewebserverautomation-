@@ -1,0 +1,43 @@
+---
+# ==============================================================================
+# Role Tasks: roles/webserver/tasks/main.yml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# ==============================================================================
+
+- name: "[Role: Webserver] Ensure Nginx package is installed"
+  ansible.builtin.apt:
+    name: "{{ webserver_package }}"
+    state: present
+    update_cache: false
+
+- name: "[Role: Webserver] Ensure document root directory exists"
+  ansible.builtin.file:
+    path: "{{ webserver_doc_root }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: "[Role: Webserver] Deploy Nginx virtual host configuration"
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload Nginx Service
+
+- name: "[Role: Webserver] Deploy dynamic HTML landing page"
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ webserver_doc_root }}/index.html"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+
+- name: "[Role: Webserver] Ensure Nginx service is running and enabled"
+  ansible.builtin.service:
+    name: "{{ webserver_service }}"
+    state: started
+    enabled: true

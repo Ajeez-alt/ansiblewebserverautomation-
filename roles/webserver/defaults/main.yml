@@ -1,0 +1,12 @@
+---
+# ==============================================================================
+# Role Defaults: roles/webserver/defaults/main.yml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# ==============================================================================
+
+webserver_package: nginx
+webserver_service: nginx
+webserver_port: 80
+webserver_doc_root: /var/www/html
+webserver_server_name: localhost
+webserver_title: "Ansible Automated Web Server"

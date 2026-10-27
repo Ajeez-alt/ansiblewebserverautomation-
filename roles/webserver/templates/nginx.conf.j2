@@ -1,0 +1,19 @@
+server {
+    listen {{ webserver_port | default(80) }} default_server;
+    listen [::]:{{ webserver_port | default(80) }} default_server;
+
+    server_name {{ webserver_server_name | default('_') }};
+    root {{ webserver_doc_root | default('/var/www/html') }};
+    index index.html;
+
+    add_header X-Managed-By "Ansible-Role-Webserver";
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /health {
+        access_log off;
+        return 200 "Role Webserver Healthy\n";
+    }
+}

@@ -1,0 +1,9 @@
+---
+# ==============================================================================
+# Role Internal Vars: roles/webserver/vars/main.yml
+# Managed by: ARON YUVARAJ J (Roll No. 23bcs162)
+# ==============================================================================
+
+required_directories:
+  - "{{ webserver_doc_root }}"
+  - "/var/log/nginx"
