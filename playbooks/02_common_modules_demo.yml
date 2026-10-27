@@ -1,0 +1,110 @@
+---
+# ==============================================================================
+# Playbook: 02_common_modules_demo.yml
+# Purpose: Comprehensive demonstration of core Ansible modules
+# Author: AJEEZ PRABU B (Roll No. 23bcs161)
+# ==============================================================================
+- name: Demonstration of Common Ansible Modules
+  hosts: webservers
+  become: true
+  gather_facts: true
+
+  vars:
+    demo_base_dir: /opt/ansible_module_demo
+    sample_config_file: /opt/ansible_module_demo/app.conf
+
+  tasks:
+    # -------------------------------------------------------------------------
+    # 1. file Module: Directory creation, permissions, and state management
+    # -------------------------------------------------------------------------
+    - name: "[file module] Create demonstration directory structure"
+      ansible.builtin.file:
+        path: "{{ demo_base_dir }}"
+        state: directory
+        owner: ajeez
+        group: ajeez
+        mode: "0755"
+
+    - name: "[file module] Create a nested logs directory"
+      ansible.builtin.file:
+        path: "{{ demo_base_dir }}/logs"
+        state: directory
+        mode: "0750"
+
+    # -------------------------------------------------------------------------
+    # 2. copy Module: Deploying static files with explicit permissions
+    # -------------------------------------------------------------------------
+    - name: "[copy module] Deploy a configuration template with inline content"
+      ansible.builtin.copy:
+        dest: "{{ sample_config_file }}"
+        content: |
+          # Automated Configuration File
+          APP_NAME=AnsibleDemoApp
+          APP_ENV=production
+          PORT=8080
+          DEBUG=false
+        owner: ajeez
+        group: ajeez
+        mode: "0644"
+
+    # -------------------------------------------------------------------------
+    # 3. lineinfile Module: Safe, surgical editing of configuration files
+    # -------------------------------------------------------------------------
+    - name: "[lineinfile module] Append a metrics monitoring flag"
+      ansible.builtin.lineinfile:
+        path: "{{ sample_config_file }}"
+        line: "METRICS_ENABLED=true"
+        state: present
+
+    - name: "[lineinfile module] Update DEBUG flag using regex matching"
+      ansible.builtin.lineinfile:
+        path: "{{ sample_config_file }}"
+        regexp: '^DEBUG='
+        line: "DEBUG=false # Locked by Ansible"
+
+    # -------------------------------------------------------------------------
+    # 4. stat Module: Inspect filesystem attributes
+    # -------------------------------------------------------------------------
+    - name: "[stat module] Verify status of generated config file"
+      ansible.builtin.stat:
+        path: "{{ sample_config_file }}"
+      register: config_stat_result
+
+    - name: "[debug module] Print file size and checksum"
+      ansible.builtin.debug:
+        msg: "File exists: {{ config_stat_result.stat.exists }} | Size: {{ config_stat_result.stat.size }} bytes | Mode: {{ config_stat_result.stat.mode }}"
+
+    # -------------------------------------------------------------------------
+    # 5. command & shell Modules: Command execution and stdout capture
+    # -------------------------------------------------------------------------
+    - name: "[command module] Run uptime without shell interpolation"
+      ansible.builtin.command: uptime
+      register: uptime_output
+      changed_when: false
+
+    - name: "[shell module] Run pipeline with grep and awk"
+      ansible.builtin.shell: "grep -E '^APP_NAME|^METRICS_ENABLED' {{ sample_config_file }}"
+      register: grep_output
+      changed_when: false
+
+    - name: "[debug module] Display parsed configuration lines"
+      ansible.builtin.debug:
+        msg: "{{ grep_output.stdout_lines }}"
+
+    # -------------------------------------------------------------------------
+    # 6. apt Module: Idempotent package management
+    # -------------------------------------------------------------------------
+    - name: "[apt module] Ensure utility package 'tree' is installed"
+      ansible.builtin.apt:
+        name: tree
+        state: present
+        update_cache: false
+
+    # -------------------------------------------------------------------------
+    # 7. service Module: State verification
+    # -------------------------------------------------------------------------
+    - name: "[service module] Ensure Nginx web service is actively running"
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true

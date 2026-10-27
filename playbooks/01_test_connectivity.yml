@@ -1,0 +1,25 @@
+---
+# ==============================================================================
+# Playbook: 01_test_connectivity.yml
+# Purpose: Basic ping, facts verification, and variable inspection
+# Author: AJEEZ PRABU B (Roll No. 23bcs161)
+# ==============================================================================
+- name: Infrastructure Health & Connectivity Verification
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Test node reachability using ping module
+      ansible.builtin.ping:
+
+    - name: Display basic node information
+      ansible.builtin.debug:
+        msg: >
+          Host: {{ inventory_hostname }} |
+          OS: {{ ansible_distribution }} {{ ansible_distribution_version }} |
+          Architecture: {{ ansible_architecture }} |
+          Default IPv4: {{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0] | default('127.0.0.1')) }}
+
+    - name: Verify global inventory variables
+      ansible.builtin.debug:
+        msg: "Organization: {{ organization | default('Mepco Schlenk') }} | Env: {{ environment_name | default('production') }}"
