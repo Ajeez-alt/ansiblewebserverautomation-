@@ -1,0 +1,139 @@
+---
+# ==============================================================================
+# Playbook: deploy_webserver.yml
+# Purpose: Complete enterprise installation and configuration of Nginx Web Server
+# Author: ASHIQ RAHMAN B (Roll No. 23bcs163)
+# Supported Targets: [webservers]
+# ==============================================================================
+- name: Deploy and Configure High-Availability Nginx Web Server
+  hosts: webservers
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: "[Pre-check] Verify managed node operating system compatibility"
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['os_family'] == "Debian"
+        fail_msg: "This playbook is tested and designed for Debian/Ubuntu based systems."
+        success_msg: "Target OS family '{{ ansible_facts['os_family'] }}' confirmed compatible."
+
+    - name: "[Pre-check] Display target deployment details"
+      ansible.builtin.debug:
+        msg: "Deploying web server to '{{ inventory_hostname }}' on port {{ http_port | default(80) }}"
+
+  tasks:
+    # -------------------------------------------------------------------------
+    # 1. Package Installation
+    # -------------------------------------------------------------------------
+    - name: Ensure Nginx web server package is installed
+      ansible.builtin.apt:
+        name: "{{ web_package_name | default('nginx') }}"
+        state: present
+        update_cache: false
+
+    # -------------------------------------------------------------------------
+    # 2. Directory Structure Management
+    # -------------------------------------------------------------------------
+    - name: Ensure web document root exists with proper permissions
+      ansible.builtin.file:
+        path: "{{ doc_root | default('/var/www/html') }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0755"
+
+    - name: Ensure backup directory exists
+      ansible.builtin.file:
+        path: "{{ backup_dir | default('/var/backups/webserver') }}"
+        state: directory
+        mode: "0700"
+
+    # -------------------------------------------------------------------------
+    # 3. Virtual Host & Server Configuration Deployment
+    # -------------------------------------------------------------------------
+    - name: Deploy custom Nginx virtual host configuration from template
+      ansible.builtin.template:
+        src: ../templates/nginx_vhost.conf.j2
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      notify:
+        - Reload Nginx service
+
+    - name: Ensure default site is enabled via symlink
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+      notify:
+        - Reload Nginx service
+
+    # -------------------------------------------------------------------------
+    # 4. Dynamic Web Content Deployment (Jinja2)
+    # -------------------------------------------------------------------------
+    - name: Deploy dynamic HTML landing page using Jinja2 template
+      ansible.builtin.template:
+        src: ../templates/index.html.j2
+        dest: "{{ doc_root | default('/var/www/html') }}/index.html"
+        owner: www-data
+        group: www-data
+        mode: "0644"
+
+    # -------------------------------------------------------------------------
+    # 5. Service State Assurance
+    # -------------------------------------------------------------------------
+    - name: Ensure Nginx service is started and enabled at boot
+      ansible.builtin.service:
+        name: "{{ web_service_name | default('nginx') }}"
+        state: started
+        enabled: true
+
+  # ---------------------------------------------------------------------------
+  # Handlers: Triggered conditionally upon configuration change
+  # ---------------------------------------------------------------------------
+  handlers:
+    - name: Validate Nginx syntax
+      ansible.builtin.command: nginx -t
+      listen: "Reload Nginx service"
+      changed_when: false
+
+    - name: Restart Nginx daemon
+      ansible.builtin.service:
+        name: "{{ web_service_name | default('nginx') }}"
+        state: reloaded
+      listen: "Reload Nginx service"
+
+  # ---------------------------------------------------------------------------
+  # Post-tasks: Automated End-to-End Smoke Test & Health Check
+  # ---------------------------------------------------------------------------
+  post_tasks:
+    - name: Flush all pending handlers before verification
+      ansible.builtin.meta: flush_handlers
+
+    - name: Verify Web Server HTTP endpoint responds with 200 OK
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ http_port | default(80) }}/"
+        return_content: yes
+        status_code: 200
+      register: web_response
+
+    - name: Verify Web Server /health endpoint responds
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ http_port | default(80) }}/health"
+        return_content: yes
+        status_code: 200
+      register: health_response
+
+    - name: Display Web Server Health Verification Summary
+      ansible.builtin.debug:
+        msg:
+          - "========================================================"
+          - "WEB SERVER DEPLOYMENT VERIFICATION SUCCESSFUL!"
+          - "Target Host: {{ inventory_hostname }}"
+          - "HTTP Status Code: {{ web_response.status }}"
+          - "Server Header: {{ web_response.server | default('nginx') }}"
+          - "Health Probe Output: {{ health_response.content | trim }}"
+          - "========================================================"
